@@ -1,0 +1,56 @@
+apiVersion: bucket/v1
+kind: Schema
+metadata:
+  name: onesignal-notification
+spec:
+  title: OneSignal Notifications
+  description: OneSignal Notifications that have been sent by the system.
+  acl:
+    write: "true==true"
+    read: "true==true"
+  properties:
+    title:
+      type: string
+    body:
+      type: string
+    url:
+      type: string
+    segment:
+      type: string
+    player_id:
+      type: string
+---
+apiVersion: function/v1
+kind: Function
+metadata:
+  name: onesignal-push-notification-process
+spec:
+  title: OneSignal Push Notification
+  description: Function of sending OneSignal notification
+  code: ./notification/src/notification.js
+  runtime:
+    name: Node
+    language: Javascript
+  environmet:
+    - name: REST_API_KEY
+      value: "Test"
+    - name: APP_ID
+      value: "Test"
+  dependency:
+    - name: https
+      versipon: latest
+---
+apiVersion: function/v1
+kind: Trigger
+metadata:
+  name: process-sending-onesignal-notification-when-added
+spec:
+  name: default
+  func: onesignal-push-notification-process
+  type: bucket
+  bucketOptions:
+    bucket:
+      resourceFieldRef:
+        bucketName: onesignal-notification
+      phase: AFTER
+      type: INSERT
