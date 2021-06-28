@@ -19,6 +19,12 @@ spec:
       type: string
     player_id:
       type: string
+    big_picture:
+      type: storage
+    large_icon:
+      type: storage
+    date:
+      type: date
 ---
 apiVersion: function/v1
 kind: Function
